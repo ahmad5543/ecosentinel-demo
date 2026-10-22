@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSentinel | Acoustic Monitoring Prototype</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#17243a;--line:#263650;--text:#edf4ff;--muted:#9aabc3;--green:#67e8a5;--yellow:#f6c85f;--red:#ff7b86;--blue:#78b7ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top left,#14253b 0%,var(--bg) 55%);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1180px;margin:auto;padding:28px 20px 48px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:13px}.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(145deg,#2c9c70,#174e51);display:grid;place-items:center;font-size:25px;box-shadow:0 8px 30px #0003}
+h1{font-size:25px;letter-spacing:-.6px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:3px}
+.pill{border:1px solid #775e28;background:#382e18;color:#ffdb8a;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700;letter-spacing:.2px}
+.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin:22px 0}.eyebrow{color:var(--green);font-size:11px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase}
+h2{font-size:clamp(25px,4vw,35px);line-height:1.15;letter-spacing:-.9px;margin:8px 0 9px}.hero p{color:var(--muted);max-width:680px;margin:0}
+.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#1b2a41;color:var(--text);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}.btn.primary{background:var(--green);border-color:var(--green);color:#082118}.btn.warn{border-color:#80515a;background:#3a222d;color:#ffc4c9}.btn:hover{filter:brightness(1.12)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0}.card{background:linear-gradient(145deg,#152239,#101a2b);border:1px solid var(--line);border-radius:16px;padding:17px;min-width:0;box-shadow:0 12px 28px #0001}
+.metric-label{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}.metric{font-size:30px;font-weight:750;letter-spacing:-1px;margin:10px 0 2px}.metric small{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:0}.trend{font-size:12px;color:var(--green)}.trend.warn{color:var(--yellow)}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:28px 0 13px}.section-title h3{margin:0;font-size:17px}.section-title span{font-size:12px;color:var(--muted)}
+.nodes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.node{position:relative;overflow:hidden}.node:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}.node.alert:before{background:var(--red)}.node-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.node h4{margin:0;font-size:15px}.node p{color:var(--muted);font-size:12px;margin:4px 0 16px}.status{font-size:11px;border-radius:999px;padding:5px 8px;background:#173a32;color:var(--green);font-weight:800;white-space:nowrap}.status.alert{background:#43232c;color:#ff9ca5}.barlabel{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin:12px 0 6px}.bar{height:8px;background:#263650;border-radius:99px;overflow:hidden}.bar>div{height:100%;background:linear-gradient(90deg,#42bd8a,#9ce8ad);border-radius:99px;transition:width .4s}.alert .bar>div{background:linear-gradient(90deg,#ef7b70,#ffbe78)}
+.content{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}.chart-card{min-height:290px}.legend{display:flex;gap:15px;color:var(--muted);font-size:12px;flex-wrap:wrap}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.chart{width:100%;height:210px;display:block;margin-top:10px}.chart text{fill:#9aabc3;font-size:10px}.alert-list{display:flex;flex-direction:column;gap:10px}.alert-item{display:flex;gap:11px;padding:12px;border-radius:11px;background:#17243a;border:1px solid #263650}.alert-icon{font-size:18px}.alert-item strong{font-size:13px;display:block}.alert-item p{font-size:12px;color:var(--muted);margin:3px 0 0}.alert-item.new{border-color:#75434d;background:#2c202e}.empty{color:var(--muted);font-size:13px;padding:14px 0}
+.footer{margin-top:20px;color:var(--muted);font-size:11px;text-align:center}.disclaimer{border:1px solid #5a4b2a;background:#282518;color:#f2dba2;padding:12px 14px;border-radius:12px;font-size:12px;margin-top:20px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nodes{grid-template-columns:1fr}.content{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}}
+@media(max-width:480px){.wrap{padding:18px 12px 30px}.grid{gap:9px}.card{padding:13px}.metric{font-size:25px}.actions .btn{flex:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">🌿</div><div><h1>EcoSentinel</h1><div class="sub">AI-powered acoustic biodiversity monitoring</div></div></div>
+    <div class="pill">DEMONSTRATION MODE · SIMULATED DATA</div>
+  </header>
+  <section class="hero">
+    <div><div class="eyebrow">Environmental intelligence prototype</div><h2>Listen to the landscape.<br>Notice what changes.</h2><p>A concept dashboard for exploring wildlife acoustic activity across selected township locations.</p></div>
+    <div class="actions"><button class="btn" id="normalBtn">↻ Reset to normal</button><button class="btn primary" id="alertBtn">⚡ Simulate change</button></div>
+  </section>
+  <section class="grid">
+    <div class="card"><div class="metric-label">MONITORING NODES <span>⌖</span></div><div class="metric">03 <small>/ 03</small></div><div class="trend">All simulated nodes online</div></div>
+    <div class="card"><div class="metric-label">ACOUSTIC ACTIVITY <span>〰</span></div><div class="metric" id="activityMetric">72<small>/100</small></div><div class="trend" id="activityTrend">Within expected range</div></div>
+    <div class="card"><div class="metric-label">CHANGES FLAGGED <span>⚑</span></div><div class="metric" id="flagMetric">0</div><div class="trend" id="flagTrend">No simulated alerts</div></div>
+    <div class="card"><div class="metric-label">LAST UPDATE <span>◷</span></div><div class="metric" id="lastUpdate" style="font-size:22px">Just now</div><div class="trend">Demo session</div></div>
+  </section>
+  <div class="section-title"><h3>Monitoring locations</h3><span>Illustrative nodes · not live sensors</span></div>
+  <section class="nodes">
+    <div class="card node" id="node0"><div class="node-head"><div><h4>Node A · Green Area</h4><p>Vegetated park / tree cover</p></div><span class="status" id="status0">NORMAL</span></div><div class="barlabel"><span>Acoustic activity index</span><strong id="value0">76 / 100</strong></div><div class="bar"><div id="bar0" style="width:76%"></div></div><div class="barlabel"><span>Compared with baseline</span><span id="delta0">+2%</span></div></div>
+    <div class="card node" id="node1"><div class="node-head"><div><h4>Node B · Township Edge</h4><p>Green space near development</p></div><span class="status" id="status1">NORMAL</span></div><div class="barlabel"><span>Acoustic activity index</span><strong id="value1">68 / 100</strong></div><div class="bar"><div id="bar1" style="width:68%"></div></div><div class="barlabel"><span>Compared with baseline</span><span id="delta1">−3%</span></div></div>
+    <div class="card node" id="node2"><div class="node-head"><div><h4>Node C · Wetland</h4><p>Water-edge habitat</p></div><span class="status" id="status2">NORMAL</span></div><div class="barlabel"><span>Acoustic activity index</span><strong id="value2">72 / 100</strong></div><div class="bar"><div id="bar2" style="width:72%"></div></div><div class="barlabel"><span>Compared with baseline</span><span id="delta2">+1%</span></div></div>
+  </section>
+  <div class="content">
+    <section><div class="section-title"><h3>Activity trend</h3><span>Last 8 simulated intervals</span></div><div class="card chart-card"><div class="legend"><span><i class="dot" style="background:#67e8a5"></i>Observed index</span><span><i class="dot" style="background:#78b7ff"></i>Baseline</span></div><svg class="chart" viewBox="0 0 600 220" preserveAspectRatio="none" aria-label="Simulated acoustic activity chart"><g id="gridLines"></g><polyline id="baselineLine" fill="none" stroke="#78b7ff" stroke-width="2" stroke-dasharray="5 5" points="20,90 100,90 180,90 260,90 340,90 420,90 500,90 580,90"/><polyline id="activityLine" fill="none" stroke="#67e8a5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="20,92 100,86 180,96 260,82 340,90 420,87 500,93 580,90"/><g id="xLabels"><text x="20" y="213">T−7</text><text x="100" y="213">T−6</text><text x="180" y="213">T−5</text><text x="260" y="213">T−4</text><text x="340" y="213">T−3</text><text x="420" y="213">T−2</text><text x="500" y="213">T−1</text><text x="580" y="213" text-anchor="end">Now</text></g></svg><div class="sub">Index is illustrative and is not a direct count of animals or species.</div></div></section>
+    <section><div class="section-title"><h3>System alerts</h3><span id="alertCount">0 active</span></div><div class="card" style="min-height:290px"><div class="alert-list" id="alertList"><div class="empty">No simulated changes detected. Select “Simulate change” to preview an alert.</div></div></div></section>
+  </div>
+  <div class="disclaimer"><strong>Prototype disclosure:</strong> This dashboard uses simulated values and scripted alerts. It does not connect to microphones, process real audio, run an AI model, or provide verified biodiversity measurements. A real system would require field recordings, model evaluation, and ecological interpretation.</div>
+  <div class="footer">EcoSentinel · KEEE3553 Engineering Project Management and Finance · Concept demonstration</div>
+</div>
+<script>
+const baseline=[70,72,71,73,72,74,71,72];
+let changed=false;
+const grid=document.getElementById('gridLines');
+for(let i=0;i<5;i++){let y=20+i*42;grid.innerHTML+=`<line x1="20" y1="${y}" x2="580" y2="${y}" stroke="#263650" stroke-width="1"/><text x="2" y="${y+3}">${100-i*25}</text>`}
+function points(vals){return vals.map((v,i)=>`${20+i*80},${200-v*1.65}`).join(' ')}
+function render(isAlert){
+  changed=isAlert;
+  const vals=isAlert?[72,75,70,68,51,43,39,34]:[70,73,68,75,72,76,69,72];
+  document.getElementById('activityLine').setAttribute('points',points(vals));
+  document.getElementById('baselineLine').setAttribute('points',points(baseline));
+  const nodeVals=isAlert?[76,34,61]:[76,68,72];
+  const deltas=isAlert?['+2%','−50%','−15%']:['+2%','−3%','+1%'];
+  const labels=['Green Area','Township Edge','Wetland'];
+  nodeVals.forEach((v,i)=>{
+    document.getElementById('value'+i).textContent=v+' / 100';
+    document.getElementById('bar'+i).style.width=v+'%';
+    document.getElementById('delta'+i).textContent=deltas[i];
+    const node=document.getElementById('node'+i), status=document.getElementById('status'+i);
+    const alert=isAlert&&i>0;
+    node.classList.toggle('alert',alert);status.classList.toggle('alert',alert);
+    status.textContent=alert?'CHANGE FLAGGED':'NORMAL';
+  });
+  document.getElementById('activityMetric').innerHTML=(isAlert?'54':'72')+'<small>/100</small>';
+  document.getElementById('activityTrend').textContent=isAlert?'Below simulated baseline':'Within expected range';
+  document.getElementById('activityTrend').className='trend'+(isAlert?' warn':'');
+  document.getElementById('flagMetric').textContent=isAlert?'2':'0';
+  document.getElementById('flagTrend').textContent=isAlert?'2 locations flagged for review':'No simulated alerts';
+  document.getElementById('flagTrend').className='trend'+(isAlert?' warn':'');
+  document.getElementById('lastUpdate').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  document.getElementById('alertCount').textContent=isAlert?'2 active':'0 active';
+  document.getElementById('alertList').innerHTML=isAlert?`
+  <div class="alert-item new"><div class="alert-icon">⚠️</div><div><strong>Node B · Township Edge</strong><p>Simulated acoustic activity fell well below its baseline. Further field review recommended.</p></div></div>
+  <div class="alert-item new"><div class="alert-icon">⚠️</div><div><strong>Node C · Wetland</strong><p>Simulated activity change crossed the illustrative alert threshold.</p></div></div>
+  <div class="sub">These are scripted demonstration alerts, not detections from real recordings.</div>`:`<div class="empty">No simulated changes detected. Select “Simulate change” to preview an alert.</div>`;
+}
+document.getElementById('alertBtn').addEventListener('click',()=>render(true));
+document.getElementById('normalBtn').addEventListener('click',()=>render(false));
+render(false);
+</script>
+</body>
+</html>
